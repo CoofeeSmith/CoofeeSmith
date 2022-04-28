@@ -19,13 +19,13 @@ const firstBrewery = {
 };
 
 const user = {
-  id:
-  firstName:
-  lastName:
-  address:
-  city:
-  state:
-  zip:
-  country:
-  favorites:
+  id,
+  firstName,
+  lastName,
+  address,
+  city,
+  state,
+  zip,
+  country,
+  favorites
 }

@@ -39,7 +39,7 @@ brewController.getBreweries = async (req, res, next) => {
 
 brewController.getVisited = async (req, res, next) => {
   ////// getFaves to Do ////////
-  // console.log(`MADE IT TO getVISITED`);
+  console.log(`Made it to the get Visited`);
   let usersID;
 
   if (req.query.id) {
@@ -52,7 +52,7 @@ brewController.getVisited = async (req, res, next) => {
   // console.log(`USERSID ${usersID}`);
 
   //       /:id for getting req.params.id
-  const queryString = `SELECT * FROM visited WHERE usersid = ${usersID}`;
+  const queryString = `SELECT * FROM visited WHERE usersid = ${usersID} ORDER BY breweryname`;
   try {
     const visits = await db.query(queryString);
     res.locals.visited = visits.rows;
@@ -93,7 +93,7 @@ brewController.deleteVisitedBrew = async (req, res, next) => {
     console.log('AFTER DESTRUCTURING');
     // const text = `DELETE FROM visited WHERE usersid = $1 RETURNING *`;
     // const values = [userId];
-    const text = `DELETE FROM visited WHERE usersid = $1 AND breweryname = $2 RETURNING *`;
+    const text = `DELETE FROM visited WHERE usersid = $1 AND breweryname = $2`; //RETURNING *
     const values = [userId, breweryname];
     // console.log(`userId: ${userId}`);
 
@@ -106,11 +106,10 @@ brewController.deleteVisitedBrew = async (req, res, next) => {
       if (err) {
         console.log(err.stack);
       } else {
+        return next();
         console.log(res.rows[0]);
       }
     });
-
-    return next();
   } catch (err) {
     throw new Error({
       log: 'error in the brewController deleteVisitedBrews method',
@@ -119,7 +118,35 @@ brewController.deleteVisitedBrew = async (req, res, next) => {
   }
 };
 
+brewController.checkDuplicate = async(req, res, next) => {
+  res.locals.duplicate = false;
+  try {
+    const { breweryid, userId } = req.body.addVisited;
+    res.locals.userid = userId;
+    res.locals.breweryid = breweryid;
+    
+    const values = [breweryid, userId]
+    const text = `SELECT * FROM visited WHERE breweryid = $1 AND usersid = $2`
+    await db.query(text, values, (err, response) => {
+      response = response.rows;
+      if (response.length === 0) {
+        return next();
+      } 
+      else {
+        res.locals.duplicate = true;
+        return next();
+      }
+    });
+  } catch (err) {
+    throw new Error({
+      log: 'error in the brewController checkDuplicate method',
+      message: { err: 'error in the brewController checkDuplicate method' },
+    });
+  }
+};
+
 brewController.addVisited = async (req, res, next) => {
+  if(res.locals.duplicate) return next();
   //// I AM NOT sure if this is how I would add new IDs to the res.locals object. I know that it would need to be an array
   /// WHEN IT COMES BACK FROM THE DB ///
   try {
@@ -158,9 +185,10 @@ brewController.addVisited = async (req, res, next) => {
         console.log(err.stack);
       } else {
         console.log(res.rows[0]);
+        return next();
       }
     });
-    return next();
+    
   } catch (err) {
     console.log(err);
     // throw new Error({

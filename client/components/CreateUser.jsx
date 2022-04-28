@@ -109,8 +109,12 @@ const CreateUser = () => {
             type="submit"
             value="Create User"
           ></input>
-
         </form>
+        <Link to="/main">
+            <button className="backButton">
+            Back to Main Page
+            </button>
+        </Link>
       </div>
     </div>
   )

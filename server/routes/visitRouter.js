@@ -18,6 +18,7 @@ router.delete(
   '/delete',
   brewController.deleteVisitedBrew,
   brewController.getVisited,
+  brewController.getBreweries,
   (req, res) => {
     console.log(
       'made it back from controller to the apiBrewRouter DELETE middleware'
@@ -29,8 +30,10 @@ router.delete(
 router.post(
   // '/visited/:userId',
   '/add',
+  brewController.checkDuplicate,
   brewController.addVisited,
   brewController.getVisited,
+  brewController.getBreweries,
   (req, res) => {
     // console.log('IN POST REQUEST');
     // console.log(res.locals.visited);

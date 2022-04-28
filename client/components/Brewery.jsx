@@ -46,6 +46,7 @@ const Brewery = (props) => {
           <button
             className="addButton"
             onClick={(e) => {
+              e.preventDefault()
               bAttribs.addStateToVisited({
                 id: bAttribs.id,
                 name: bAttribs.name,
@@ -55,6 +56,7 @@ const Brewery = (props) => {
                 phone: bAttribs.phone,
                 // usersid: user.usersid,
               })
+              console.log(bAttribs)
             }}
           >
             Add to Visited
@@ -77,6 +79,7 @@ const Brewery = (props) => {
           <button
             className="removeButton"
             onClick={(e) => {
+              e.preventDefault()
               bAttribs.removeVisited({
                 id: bAttribs.id,
                 name: bAttribs.breweryname,
@@ -85,6 +88,8 @@ const Brewery = (props) => {
                 city: bAttribs.brewerycity,
                 phone: bAttribs.breweryphone,
               })
+              console.log(bAttribs)
+
             }}
           >
             Remove
