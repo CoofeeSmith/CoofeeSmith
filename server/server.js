@@ -17,11 +17,8 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 app.use("/api", apiBrewRouter);
-
 app.use("/visited", visitRouter);
-
 app.use("/client", express.static(path.resolve(__dirname, "../client")));
-
 
 app.get('/', (req, res) => {
   res.status(200).sendFile(path.join(__dirname, '../client/template.html'));

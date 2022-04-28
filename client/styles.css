@@ -8,7 +8,7 @@ body {
   background-size: cover;
   background-repeat: no-repeat;
 
-  font-family: 'Poppins', sans-serif;
+  font-family: 'Montserrat', sans-serif;
 
   box-sizing: border-box;
   margin: 0;
@@ -102,6 +102,16 @@ button {
   border: none;
   outline: none;
   border-radius: 3px;
+  align-self: center;
+  text-align: center;
+}
+
+.backButton {
+  background-color: rgb(15, 173, 68);
+  border: none;
+  outline: none;
+  border-radius: 3px;
+  color: black
 }
 
 .submitButton:hover {

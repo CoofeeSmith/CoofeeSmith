@@ -43,7 +43,7 @@ const alreadyUsed = await db.query(queryString);
 };
 
 userController.verifyLogin = async (req, res, next) => {
-  console.log('ENTERING veryfiy login');
+  console.log('ENTERING verify login');
   console.log(`Request Body User Info${req.body.userInfo}`);
   console.log(req.body.userInfo);
   if (req.body.userInfo.username == null)
@@ -65,6 +65,7 @@ userController.verifyLogin = async (req, res, next) => {
       )
     ) {
       console.log('Passwords match!!!');
+
       next();
     } else {
       res.send('Incorrect password');
@@ -79,6 +80,7 @@ userController.setCookie = (req, res, next) => {
   // set cookie with a name, value (in this case the username)
   // httpOnly prevents the client from editing cookie in the browser
   res.cookie('BrewCookie', req.body.userInfo.username, { httpOnly: true });
+  // console.log('HELLLOOOO', req.body.userInfo.username)
   return next();
 };
 
@@ -88,6 +90,26 @@ userController.checkUser = (req, res, next) => {
   } else { 
     res.redirect('/userlanding');
   }
+}
+
+userController.getUserInfo = (req, res, next) => {
+  const username = req.cookies.BrewCookie;
+  console.log('username from BrewCookie', username);
+
+  const text = `SELECT * FROM users WHERE userName = $1`;
+  const values = [username];
+  db.query(text,values) 
+    .then(result => result.rows)
+    .then(result => {
+      res.locals.userInfo = result[0];
+      return res.locals.userInfo;
+    })
+    .then(() => {
+      return next();
+    })
+    .catch(() => {
+      return next();
+    })
 }
 
 module.exports = userController;
